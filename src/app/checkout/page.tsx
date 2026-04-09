@@ -38,7 +38,7 @@ export default function CheckoutPage() {
     }
 
     clearCart();
-    router.push(`/success?orderId=${data.orderId}`);
+    router.push(`/payment/${data.orderId}`);
   };
 
   return (
