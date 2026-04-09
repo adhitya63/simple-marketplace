@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 interface Product {
   id: number;
   name: string;
+  size: string | null;
   price: number;
   image_url: string;
 }
@@ -26,6 +27,9 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-4">
         <h3 className="font-medium text-gray-900">{product.name}</h3>
+        {product.size && (
+          <p className="text-xs text-gray-500 mt-0.5">{product.size}</p>
+        )}
         <p className="text-blue-600 font-bold mt-1">${product.price}</p>
         <button
           onClick={() => addItem(product)}
