@@ -55,9 +55,7 @@ export default function CheckoutPage() {
               <div key={item.id} className="flex items-center gap-4 p-4">
                 <div className="flex-1">
                   <p className="font-medium text-gray-900">{item.name}</p>
-                  <p className="text-sm text-gray-500">
-                    ${(item.price / 100).toFixed(2)} each
-                  </p>
+                  <p className="text-sm text-gray-500">${item.price} each</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -75,7 +73,7 @@ export default function CheckoutPage() {
                   </button>
                 </div>
                 <p className="w-20 text-right font-medium">
-                  ${((item.price * item.quantity) / 100).toFixed(2)}
+                  ${item.price * item.quantity}
                 </p>
                 <button
                   onClick={() => removeItem(item.id)}
@@ -86,9 +84,7 @@ export default function CheckoutPage() {
               </div>
             ))}
             <div className="p-4 flex justify-end">
-              <p className="font-bold text-lg">
-                Total: ${(total / 100).toFixed(2)}
-              </p>
+              <p className="font-bold text-lg">Total: ${total}</p>
             </div>
           </div>
 
