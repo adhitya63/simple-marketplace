@@ -13,45 +13,91 @@ async function main() {
   await prisma.product.createMany({
     data: [
       {
-        name: "Wireless Headphones",
-        price: 4999, // $49.99 in cents
+        name: "Ladies Drink",
+        size: "One Pint",
+        price: 50,
         image_url:
-          "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80",
+          "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
       },
       {
-        name: "Mechanical Keyboard",
-        price: 8999,
+        name: "Ladies Drink",
+        size: "1 Tray of 5",
+        price: 100,
         image_url:
-          "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80",
+          "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
       },
       {
-        name: "USB-C Hub",
-        price: 2999,
+        name: "Ladies Drink",
+        size: "1 Tray of 10",
+        price: 200,
         image_url:
-          "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&q=80",
+          "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
       },
       {
-        name: "Laptop Stand",
-        price: 3499,
+        name: "Ladies Drink",
+        size: "Booking",
+        price: 300,
         image_url:
-          "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&q=80",
+          "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
       },
       {
-        name: "Webcam HD",
-        price: 5999,
+        name: "Martell VSOP",
+        price: 200,
         image_url:
-          "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&q=80",
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
       },
       {
-        name: "Mouse Pad XL",
-        price: 1499,
+        name: "Hennessy VSOP",
+        price: 200,
         image_url:
-          "https://images.unsplash.com/photo-1616400619175-5beda3a17896?w=400&q=80",
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Glenlivet 12 Years",
+        price: 200,
+        image_url:
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Roku Gin",
+        price: 200,
+        image_url:
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Martell Noblige",
+        price: 260,
+        image_url:
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Macallan 12",
+        price: 380,
+        image_url:
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Martell Cordon Bleu",
+        price: 380,
+        image_url:
+          "https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80",
+      },
+      {
+        name: "Heineken Pint Bucket of 8",
+        price: 77,
+        image_url:
+          "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400&q=80",
+      },
+      {
+        name: "Red / White Wine",
+        price: 77,
+        image_url:
+          "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80",
       },
     ],
   });
 
-  console.log("✅ Seeded 6 products");
+  console.log("✅ Seeded 13 products");
 }
 
 main()

@@ -26,9 +26,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-4">
         <h3 className="font-medium text-gray-900">{product.name}</h3>
-        <p className="text-blue-600 font-bold mt-1">
-          ${(product.price / 100).toFixed(2)}
-        </p>
+        <p className="text-blue-600 font-bold mt-1">${product.price}</p>
         <button
           onClick={() => addItem(product)}
           className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition-colors"
