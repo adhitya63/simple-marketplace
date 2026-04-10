@@ -57,11 +57,9 @@ export async function POST(req: NextRequest) {
   const surcharge = Math.round(subtotal * 0.05);
   const total = subtotal + surcharge;
 
-  // Generate invoice number: INV-YYYYMM-XXXXX (based on timestamp + random suffix for uniqueness)
-  const now = new Date();
-  const yyyymm = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const suffix = Math.random().toString(36).substring(2, 7).toUpperCase();
-  const invoice_number = `INV-${yyyymm}-${suffix}`;
+  // Generate invoice number: INV-XXXX (4 random alphanumeric characters)
+  const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const invoice_number = `INV-${suffix}`;
 
   const order = await prisma.order.create({
     data: {
