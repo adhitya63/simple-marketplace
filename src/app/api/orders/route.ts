@@ -6,6 +6,7 @@ import { z } from "zod";
 const orderSchema = z.object({
   customer_name: z.string().min(1),
   email: z.string().email(),
+  remarks: z.string().optional(),
   items: z
     .array(
       z.object({
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { customer_name, email, items } = parsed.data;
+  const { customer_name, email, remarks, items } = parsed.data;
 
   // Fetch product prices from DB
   const productIds = items.map((i) => i.product_id);
@@ -50,16 +51,25 @@ export async function POST(req: NextRequest) {
   }
 
   const productMap = new Map(products.map((p) => [p.id, p]));
-  const total = items.reduce((sum, item) => {
+  const subtotal = items.reduce((sum, item) => {
     const product = productMap.get(item.product_id)!;
     return sum + product.price * item.quantity;
   }, 0);
+  const surcharge = Math.round(subtotal * 0.05);
+  const total = subtotal + surcharge;
+
+  // Generate invoice number: INV-XXXX (4 random alphanumeric characters)
+  const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+  const invoice_number = `INV-${suffix}`;
 
   const order = await prisma.order.create({
     data: {
       customer_name,
       email,
+      remarks: remarks ?? null,
       total,
+      surcharge,
+      invoice_number,
       order_items: {
         create: items.map((item) => ({
           product_id: item.product_id,
@@ -77,12 +87,15 @@ export async function POST(req: NextRequest) {
       to: email,
       customerName: customer_name,
       orderId: order.id,
+      invoiceNumber: order.invoice_number,
+      orderDate: order.created_at,
       items: order.order_items.map((oi) => ({
         name: oi.product.name,
         quantity: oi.quantity,
         price: oi.price,
       })),
       total,
+      surcharge,
     });
   } catch {
     // Email failure should not block the order

@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 interface Product {
   id: number;
   name: string;
+  size: string | null;
   price: number;
   image_url: string;
 }

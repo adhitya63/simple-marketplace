@@ -7,7 +7,11 @@ import { useState } from "react";
 export default function CheckoutPage() {
   const { items, total, updateQuantity, removeItem, clearCart } = useCart();
   const router = useRouter();
-  const [form, setForm] = useState({ customer_name: "", email: "" });
+  const [form, setForm] = useState({
+    customer_name: "",
+    email: "",
+    remarks: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,41 +42,49 @@ export default function CheckoutPage() {
     }
 
     clearCart();
-    router.push(`/success?orderId=${data.orderId}`);
+    router.push(`/payment/${data.orderId}`);
   };
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Checkout</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        Checkout
+      </h1>
 
       {items.length === 0 ? (
-        <p className="text-gray-500">Your cart is empty.</p>
+        <p className="text-gray-500 dark:text-gray-400">Your cart is empty.</p>
       ) : (
         <>
           {/* Cart items */}
-          <div className="bg-white rounded-xl border border-gray-200 mb-6 divide-y divide-gray-100">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-6 divide-y divide-gray-100 dark:divide-gray-700">
             {items.map((item) => (
               <div key={item.id} className="flex items-center gap-4 p-4">
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">{item.name}</p>
-                  <p className="text-sm text-gray-500">${item.price} each</p>
+                  <p className="font-medium text-gray-900 dark:text-white">
+                    {item.name}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    ${item.price} each
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold flex items-center justify-center"
+                    className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 font-bold flex items-center justify-center"
                   >
                     −
                   </button>
-                  <span className="w-6 text-center">{item.quantity}</span>
+                  <span className="w-6 text-center dark:text-white">
+                    {item.quantity}
+                  </span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 font-bold flex items-center justify-center"
+                    className="w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 font-bold flex items-center justify-center"
                   >
                     +
                   </button>
                 </div>
-                <p className="w-20 text-right font-medium">
+                <p className="w-20 text-right font-medium dark:text-white">
                   ${item.price * item.quantity}
                 </p>
                 <button
@@ -83,19 +95,34 @@ export default function CheckoutPage() {
                 </button>
               </div>
             ))}
-            <div className="p-4 flex justify-end">
-              <p className="font-bold text-lg">Total: ${total}</p>
+            <div className="p-4 space-y-1 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>Subtotal</span>
+                <span>${total}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>5% Surcharge</span>
+                <span>${Math.round(total * 0.05)}</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg dark:text-white pt-1 border-t border-gray-100 dark:border-gray-700">
+                <span>Total</span>
+                <span>${total + Math.round(total * 0.05)}</span>
+              </div>
             </div>
           </div>
 
           {/* Order form */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-xl border border-gray-200 p-6 space-y-4"
+            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-4"
           >
-            <h2 className="font-semibold text-gray-800">Your Details</h2>
+            <h2 className="font-semibold text-gray-800 dark:text-white">
+              Your Details
+            </h2>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Name</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Name
+              </label>
               <input
                 type="text"
                 required
@@ -103,12 +130,15 @@ export default function CheckoutPage() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, customer_name: e.target.value }))
                 }
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ WebkitTextFillColor: "inherit" }}
                 placeholder="John Doe"
               />
             </div>
             <div>
-              <label className="block text-sm text-gray-600 mb-1">Email</label>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Email
+              </label>
               <input
                 type="email"
                 required
@@ -116,8 +146,24 @@ export default function CheckoutPage() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, email: e.target.value }))
                 }
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{ WebkitTextFillColor: "inherit" }}
                 placeholder="john@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Remarks <span className="text-gray-400">(optional)</span>
+              </label>
+              <textarea
+                value={form.remarks}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, remarks: e.target.value }))
+                }
+                rows={2}
+                className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                style={{ WebkitTextFillColor: "inherit" }}
+                placeholder="Any special requests or notes…"
               />
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}

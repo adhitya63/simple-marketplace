@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import path from "path";
+import fs from "fs";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -20,56 +22,100 @@ interface InvoiceEmailParams {
   to: string;
   customerName: string;
   orderId: number;
+  invoiceNumber?: string | null;
+  orderDate?: Date | string | null;
   items: OrderItem[];
   total: number;
+  surcharge: number;
 }
 
 export async function sendInvoiceEmail({
   to,
   customerName,
   orderId,
+  invoiceNumber,
+  orderDate,
   items,
   total,
+  surcharge,
 }: InvoiceEmailParams) {
-  const itemsHtml = items
-    .map(
-      (item) =>
-        `<tr>
-          <td style="padding:8px;border:1px solid #ddd;">${item.name}</td>
-          <td style="padding:8px;border:1px solid #ddd;text-align:center;">${item.quantity}</td>
-          <td style="padding:8px;border:1px solid #ddd;text-align:right;">$${(item.price / 100).toFixed(2)}</td>
-        </tr>`,
-    )
-    .join("");
+  const logoPath = path.join(process.cwd(), "public", "logo.jpeg");
+  const logoExists = fs.existsSync(logoPath);
 
   const html = `
-    <div style="font-family:sans-serif;max-width:600px;margin:auto;">
-      <h2 style="color:#1a1a1a;">Order Confirmation #${orderId}</h2>
-      <p>Hi <strong>${customerName}</strong>, thank you for your order!</p>
-      <table style="width:100%;border-collapse:collapse;margin:20px 0;">
-        <thead>
-          <tr style="background:#f5f5f5;">
-            <th style="padding:8px;border:1px solid #ddd;text-align:left;">Product</th>
-            <th style="padding:8px;border:1px solid #ddd;">Qty</th>
-            <th style="padding:8px;border:1px solid #ddd;text-align:right;">Price</th>
-          </tr>
-        </thead>
-        <tbody>${itemsHtml}</tbody>
-        <tfoot>
-          <tr>
-            <td colspan="2" style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold;">Total</td>
-            <td style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold;">$${(total / 100).toFixed(2)}</td>
-          </tr>
-        </tfoot>
-      </table>
-      <p style="color:#888;font-size:14px;"><em>No payment required (prototype)</em></p>
+    <div style="font-family:sans-serif;max-width:600px;margin:auto;background:#000;padding:32px;border-radius:12px;">
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:24px;">
+        <img src="cid:logo@district77" alt="District 77 Private Club" style="max-width:280px;width:100%;" />
+      </div>
+
+      <!-- Card -->
+      <div style="background:#1a1a1a;border-radius:8px;padding:24px;margin-bottom:16px;">
+        <h2 style="color:#c9a84c;margin:0 0 4px 0;font-size:18px;letter-spacing:1px;text-align:center;">RECEIPT</h2>
+        <p style="color:#888;margin:0 0 4px 0;font-size:13px;">Order #${orderId}</p>
+        ${invoiceNumber ? `<p style="color:#c9a84c;margin:0 0 4px 0;font-size:12px;letter-spacing:1px;">${invoiceNumber}</p>` : `<p style="margin:0 0 4px 0;"></p>`}
+        ${orderDate ? `<p style="color:#666;margin:0 0 20px 0;font-size:12px;">${new Date(orderDate).toLocaleDateString("en-SG", { day: "2-digit", month: "long", year: "numeric" })}</p>` : `<p style="margin:0 0 20px 0;"></p>`}
+        <p style="color:#fff;margin:0 0 20px 0;">Hi <strong>${customerName}</strong>, thank you for your order!</p>
+
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid #333;">
+              <th style="padding:8px 4px;text-align:left;color:#c9a84c;font-size:12px;letter-spacing:1px;">ITEM</th>
+              <th style="padding:8px 4px;text-align:center;color:#c9a84c;font-size:12px;letter-spacing:1px;">QTY</th>
+              <th style="padding:8px 4px;text-align:right;color:#c9a84c;font-size:12px;letter-spacing:1px;">PRICE</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items
+              .map(
+                (item) => `
+            <tr style="border-bottom:1px solid #2a2a2a;">
+              <td style="padding:10px 4px;color:#fff;">${item.name}</td>
+              <td style="padding:10px 4px;color:#ccc;text-align:center;">${item.quantity}</td>
+              <td style="padding:10px 4px;color:#fff;text-align:right;">$${item.price * item.quantity}</td>
+            </tr>`,
+              )
+              .join("")}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2" style="padding:8px 4px;text-align:right;color:#888;">SUBTOTAL</td>
+              <td style="padding:8px 4px;text-align:right;color:#fff;">$${total - surcharge}</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding:8px 4px;text-align:right;color:#888;">5% SURCHARGE</td>
+              <td style="padding:8px 4px;text-align:right;color:#e6a817;">+$${surcharge}</td>
+            </tr>
+            <tr style="border-top:1px solid #333;">
+              <td colspan="2" style="padding:12px 4px;text-align:right;color:#c9a84c;font-weight:bold;">TOTAL</td>
+              <td style="padding:12px 4px;text-align:right;color:#c9a84c;font-weight:bold;font-size:16px;">$${total}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <p style="color:#555;font-size:12px;text-align:center;margin:0;">
+        77B Boat Quay, Singapore 049865
+      </p>
+      <p style="color:#555;font-size:12px;text-align:center;margin:4px 0 0 0;">
+        <a href="mailto:distict77@gmail.com" style="color:#c9a84c;text-decoration:none;">distict77@gmail.com</a>
+      </p>
     </div>
   `;
 
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to,
-    subject: `Invoice - Order #${orderId}`,
+    subject: `Invoice ${invoiceNumber ?? `#${orderId}`} – District 77`,
     html,
+    attachments: logoExists
+      ? [
+          {
+            filename: "logo.jpeg",
+            path: logoPath,
+            cid: "logo@district77",
+          },
+        ]
+      : [],
   });
 }
