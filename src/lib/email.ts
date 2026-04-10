@@ -37,7 +37,7 @@ export async function sendInvoiceEmail({
         `<tr>
           <td style="padding:8px;border:1px solid #ddd;">${item.name}</td>
           <td style="padding:8px;border:1px solid #ddd;text-align:center;">${item.quantity}</td>
-          <td style="padding:8px;border:1px solid #ddd;text-align:right;">$${(item.price / 100).toFixed(2)}</td>
+          <td style="padding:8px;border:1px solid #ddd;text-align:right;">$${item.price}</td>
         </tr>`,
     )
     .join("");
@@ -58,11 +58,11 @@ export async function sendInvoiceEmail({
         <tfoot>
           <tr>
             <td colspan="2" style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold;">Total</td>
-            <td style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold;">$${(total / 100).toFixed(2)}</td>
+            <td style="padding:8px;border:1px solid #ddd;text-align:right;font-weight:bold;">$${total}</td>
           </tr>
         </tfoot>
       </table>
-      <p style="color:#888;font-size:14px;"><em>No payment required (prototype)</em></p>
+      <p style="color:#888;font-size:14px;"><em>Thank you for your purchase!</em></p>
     </div>
   `;
 
