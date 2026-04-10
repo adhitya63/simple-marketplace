@@ -57,12 +57,19 @@ export async function POST(req: NextRequest) {
   const surcharge = Math.round(subtotal * 0.05);
   const total = subtotal + surcharge;
 
+  // Generate invoice number: INV-YYYYMM-XXXXX (based on timestamp + random suffix for uniqueness)
+  const now = new Date();
+  const yyyymm = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const suffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+  const invoice_number = `INV-${yyyymm}-${suffix}`;
+
   const order = await prisma.order.create({
     data: {
       customer_name,
       email,
       total,
       surcharge,
+      invoice_number,
       order_items: {
         create: items.map((item) => ({
           product_id: item.product_id,
@@ -80,6 +87,8 @@ export async function POST(req: NextRequest) {
       to: email,
       customerName: customer_name,
       orderId: order.id,
+      invoiceNumber: order.invoice_number,
+      orderDate: order.created_at,
       items: order.order_items.map((oi) => ({
         name: oi.product.name,
         quantity: oi.quantity,

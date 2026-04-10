@@ -62,6 +62,8 @@ export async function PATCH(
         to: order.email,
         customerName: order.customer_name,
         orderId: order.id,
+        invoiceNumber: order.invoice_number,
+        orderDate: order.created_at,
         items: order.order_items.map((i) => ({
           name: i.product.name,
           quantity: i.quantity,
@@ -108,6 +110,8 @@ export async function POST(
     to: order.email,
     customerName: order.customer_name,
     orderId: order.id,
+    invoiceNumber: order.invoice_number,
+    orderDate: order.created_at,
     items: order.order_items.map((i) => ({
       name: i.product.name,
       quantity: i.quantity,

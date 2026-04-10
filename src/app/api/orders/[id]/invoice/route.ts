@@ -41,7 +41,7 @@ export async function GET(
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Invoice #${order.id} – District 77</title>
+  <title>${order.invoice_number ?? `Invoice #${order.id}`} – District 77</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -100,6 +100,7 @@ export async function GET(
   <div class="header">
     <h1>INVOICE</h1>
     <p>Order #${order.id}</p>
+    ${order.invoice_number ? `<p style="color:#c9a84c;font-size:14px;letter-spacing:2px;margin-top:6px;">${order.invoice_number}</p>` : ""}
   </div>
 
   <div class="meta">
