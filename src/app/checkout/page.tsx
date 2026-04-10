@@ -7,7 +7,11 @@ import { useState } from "react";
 export default function CheckoutPage() {
   const { items, total, updateQuantity, removeItem, clearCart } = useCart();
   const router = useRouter();
-  const [form, setForm] = useState({ customer_name: "", email: "" });
+  const [form, setForm] = useState({
+    customer_name: "",
+    email: "",
+    remarks: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -145,6 +149,21 @@ export default function CheckoutPage() {
                 className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 style={{ WebkitTextFillColor: "inherit" }}
                 placeholder="john@example.com"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 dark:text-gray-300 mb-1">
+                Remarks <span className="text-gray-400">(optional)</span>
+              </label>
+              <textarea
+                value={form.remarks}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, remarks: e.target.value }))
+                }
+                rows={2}
+                className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                style={{ WebkitTextFillColor: "inherit" }}
+                placeholder="Any special requests or notes…"
               />
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}

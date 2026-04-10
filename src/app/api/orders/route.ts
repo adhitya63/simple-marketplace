@@ -6,6 +6,7 @@ import { z } from "zod";
 const orderSchema = z.object({
   customer_name: z.string().min(1),
   email: z.string().email(),
+  remarks: z.string().optional(),
   items: z
     .array(
       z.object({
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { customer_name, email, items } = parsed.data;
+  const { customer_name, email, remarks, items } = parsed.data;
 
   // Fetch product prices from DB
   const productIds = items.map((i) => i.product_id);
@@ -65,6 +66,7 @@ export async function POST(req: NextRequest) {
     data: {
       customer_name,
       email,
+      remarks: remarks ?? null,
       total,
       surcharge,
       invoice_number,

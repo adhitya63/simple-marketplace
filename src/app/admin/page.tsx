@@ -14,6 +14,7 @@ interface Order {
   invoice_number: string | null;
   customer_name: string;
   email: string;
+  remarks: string | null;
   total: number;
   surcharge: number;
   status: "pending" | "completed";
@@ -414,6 +415,9 @@ export default function AdminPage() {
                 <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Items
                 </th>
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
+                  Remarks
+                </th>
                 <th className="text-right px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Subtotal
                 </th>
@@ -454,6 +458,13 @@ export default function AdminPage() {
                     {order.order_items
                       .map((i) => `${i.product.name} x${i.quantity}`)
                       .join(", ")}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400 max-w-40">
+                    {order.remarks ?? (
+                      <span className="text-gray-300 dark:text-gray-600">
+                        —
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right font-medium dark:text-white">
                     ${order.total - order.surcharge}
