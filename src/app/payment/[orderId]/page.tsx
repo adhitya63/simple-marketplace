@@ -63,36 +63,40 @@ export default function PaymentPage() {
 
   return (
     <div className="max-w-md mx-auto mt-10 px-4">
-      <h1 className="text-2xl font-bold text-gray-900 mb-1 text-center">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 text-center">
         Payment
       </h1>
-      <p className="text-center text-gray-500 text-sm mb-6">
+      <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6">
         Order #{order.id} · {order.customer_name}
       </p>
 
       {/* Order Summary */}
-      <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 divide-y divide-gray-100 dark:divide-gray-700 mb-6">
         {order.order_items.map((item) => (
           <div key={item.id} className="flex justify-between px-4 py-3 text-sm">
-            <span className="text-gray-700">
+            <span className="text-gray-700 dark:text-gray-300">
               {item.product.name}
               {item.product.size ? ` (${item.product.size})` : ""} ×{" "}
               {item.quantity}
             </span>
-            <span className="font-medium">${item.price * item.quantity}</span>
+            <span className="font-medium dark:text-white">
+              ${item.price * item.quantity}
+            </span>
           </div>
         ))}
-        <div className="flex justify-between px-4 py-3 font-bold">
+        <div className="flex justify-between px-4 py-3 font-bold dark:text-white">
           <span>Total</span>
           <span>${order.total}</span>
         </div>
       </div>
 
       {/* QR Code */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col items-center mb-6">
-        <p className="text-sm text-gray-500 mb-4">Scan to confirm payment</p>
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center mb-6">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Scan to confirm payment
+        </p>
         <QRCodeSVG value={payUrl} size={200} />
-        <p className="text-xs text-gray-400 mt-4 break-all text-center">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 break-all text-center">
           {payUrl}
         </p>
       </div>
@@ -104,7 +108,7 @@ export default function PaymentPage() {
       >
         Check Order Status
       </button>
-      <p className="text-center text-xs text-gray-400 mt-3">
+      <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-3">
         Page will redirect automatically once payment is confirmed.
       </p>
     </div>

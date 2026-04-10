@@ -63,19 +63,20 @@ export default function AdminPage() {
   if (!authed) {
     return (
       <div className="max-w-sm mx-auto mt-24">
-        <h1 className="text-xl font-bold text-gray-900 mb-6 text-center">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center">
           Admin Login
         </h1>
         <form
           onSubmit={handleLogin}
-          className="bg-white rounded-xl border border-gray-200 p-6 space-y-4"
+          className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-4"
         >
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={{ WebkitTextFillColor: "inherit" }}
           />
           <button
             type="submit"
@@ -91,7 +92,9 @@ export default function AdminPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Orders
+        </h1>
         <button
           onClick={loadOrders}
           className="text-sm text-blue-600 hover:underline"
@@ -101,53 +104,60 @@ export default function AdminPage() {
       </div>
 
       {loading ? (
-        <p className="text-gray-400">Loading…</p>
+        <p className="text-gray-400 dark:text-gray-500">Loading…</p>
       ) : orders.length === 0 ? (
-        <p className="text-gray-500">No orders yet.</p>
+        <p className="text-gray-500 dark:text-gray-400">No orders yet.</p>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+              <tr className="border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   #
                 </th>
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Name
                 </th>
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Email
                 </th>
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Items
                 </th>
-                <th className="text-right px-4 py-3 text-gray-500 font-medium">
+                <th className="text-right px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Total
                 </th>
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Status
                 </th>
-                <th className="text-left px-4 py-3 text-gray-500 font-medium">
+                <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Date
                 </th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody className="divide-y divide-gray-50 dark:divide-gray-700">
               {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-400">#{order.id}</td>
-                  <td className="px-4 py-3 font-medium text-gray-900">
+                <tr
+                  key={order.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700"
+                >
+                  <td className="px-4 py-3 text-gray-400 dark:text-gray-500">
+                    #{order.id}
+                  </td>
+                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
                     {order.customer_name}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{order.email}</td>
-                  <td className="px-4 py-3 text-gray-500">
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">
+                    {order.email}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">
                     {order.order_items
                       .map((i) => `${i.product.name} x${i.quantity}`)
                       .join(", ")}
                   </td>
-                  <td className="px-4 py-3 text-right font-medium">
-                    ${(order.total / 100).toFixed(2)}
+                  <td className="px-4 py-3 text-right font-medium dark:text-white">
+                    ${order.total}
                   </td>
                   <td className="px-4 py-3">
                     <span
@@ -160,7 +170,7 @@ export default function AdminPage() {
                       {order.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-gray-400">
+                  <td className="px-4 py-3 text-gray-400 dark:text-gray-500">
                     {new Date(order.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
