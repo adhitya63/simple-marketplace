@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { sendInvoiceEmail } from "@/lib/email";
 import { notFound, redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function PayConfirmPage({
   params,
 }: {
