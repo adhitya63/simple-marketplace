@@ -98,6 +98,12 @@ export async function POST(
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
+  // Recalculate surcharge for old orders that predate the surcharge migration
+  const effectiveSurcharge =
+    order.surcharge === 0 && order.total > 0
+      ? Math.round(order.total * 0.05)
+      : order.surcharge;
+
   await sendInvoiceEmail({
     to: order.email,
     customerName: order.customer_name,
@@ -108,7 +114,7 @@ export async function POST(
       price: i.price,
     })),
     total: order.total,
-    surcharge: order.surcharge,
+    surcharge: effectiveSurcharge,
   });
 
   console.log(`[RESEND] Invoice resent to ${order.email}`);

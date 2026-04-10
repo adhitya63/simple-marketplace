@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import path from "path";
+import fs from "fs";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -33,13 +35,14 @@ export async function sendInvoiceEmail({
   total,
   surcharge,
 }: InvoiceEmailParams) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+  const logoPath = path.join(process.cwd(), "public", "logo.jpeg");
+  const logoExists = fs.existsSync(logoPath);
 
   const html = `
     <div style="font-family:sans-serif;max-width:600px;margin:auto;background:#000;padding:32px;border-radius:12px;">
       <!-- Logo -->
       <div style="text-align:center;margin-bottom:24px;">
-        <img src="${baseUrl}/logo.jpeg" alt="District 77 Private Club" style="max-width:280px;width:100%;" />
+        <img src="cid:logo@district77" alt="District 77 Private Club" style="max-width:280px;width:100%;" />
       </div>
 
       <!-- Card -->
@@ -99,5 +102,14 @@ export async function sendInvoiceEmail({
     to,
     subject: `Invoice - Order #${orderId}`,
     html,
+    attachments: logoExists
+      ? [
+          {
+            filename: "logo.jpeg",
+            path: logoPath,
+            cid: "logo@district77",
+          },
+        ]
+      : [],
   });
 }
