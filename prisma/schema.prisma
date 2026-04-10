@@ -29,6 +29,7 @@ model Order {
   customer_name String
   email         String
   total         Int
+  surcharge     Int         @default(0)
   status        OrderStatus @default(pending)
   created_at    DateTime    @default(now())
   order_items   OrderItem[]

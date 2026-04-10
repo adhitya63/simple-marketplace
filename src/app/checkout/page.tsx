@@ -91,10 +91,19 @@ export default function CheckoutPage() {
                 </button>
               </div>
             ))}
-            <div className="p-4 flex justify-end">
-              <p className="font-bold text-lg dark:text-white">
-                Total: ${total}
-              </p>
+            <div className="p-4 space-y-1 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>Subtotal</span>
+                <span>${total}</span>
+              </div>
+              <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>5% Surcharge</span>
+                <span>${Math.round(total * 0.05)}</span>
+              </div>
+              <div className="flex justify-between font-bold text-lg dark:text-white pt-1 border-t border-gray-100 dark:border-gray-700">
+                <span>Total</span>
+                <span>${total + Math.round(total * 0.05)}</span>
+              </div>
             </div>
           </div>
 

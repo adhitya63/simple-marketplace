@@ -48,6 +48,7 @@ export default async function PayConfirmPage({
         price: oi.price,
       })),
       total: order.total,
+      surcharge: order.surcharge,
     });
     console.log(`[EMAIL SENT] Invoice sent to ${order.email} for order #${id}`);
   } catch (err) {

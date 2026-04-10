@@ -50,16 +50,19 @@ export async function POST(req: NextRequest) {
   }
 
   const productMap = new Map(products.map((p) => [p.id, p]));
-  const total = items.reduce((sum, item) => {
+  const subtotal = items.reduce((sum, item) => {
     const product = productMap.get(item.product_id)!;
     return sum + product.price * item.quantity;
   }, 0);
+  const surcharge = Math.round(subtotal * 0.05);
+  const total = subtotal + surcharge;
 
   const order = await prisma.order.create({
     data: {
       customer_name,
       email,
       total,
+      surcharge,
       order_items: {
         create: items.map((item) => ({
           product_id: item.product_id,
@@ -83,6 +86,7 @@ export async function POST(req: NextRequest) {
         price: oi.price,
       })),
       total,
+      surcharge,
     });
   } catch {
     // Email failure should not block the order

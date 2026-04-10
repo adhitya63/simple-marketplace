@@ -15,6 +15,7 @@ interface Order {
   customer_name: string;
   email: string;
   total: number;
+  surcharge: number;
   status: "pending" | "completed";
   created_at: string;
   order_items: OrderItem[];
@@ -58,6 +59,19 @@ export default function AdminPage() {
       body: JSON.stringify({ status: "completed" }),
     });
     loadOrders();
+  };
+
+  const resendInvoice = async (id: number) => {
+    const res = await fetch(`/api/orders/${id}`, { method: "POST" });
+    if (res.ok) {
+      alert("Invoice resent successfully.");
+    } else {
+      alert("Failed to resend invoice.");
+    }
+  };
+
+  const downloadInvoice = (id: number) => {
+    window.open(`/api/orders/${id}/invoice`, "_blank");
   };
 
   if (!authed) {
@@ -125,6 +139,12 @@ export default function AdminPage() {
                   Items
                 </th>
                 <th className="text-right px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
+                  Subtotal
+                </th>
+                <th className="text-right px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
+                  Surcharge
+                </th>
+                <th className="text-right px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
                   Total
                 </th>
                 <th className="text-left px-4 py-3 text-gray-500 dark:text-gray-400 font-medium">
@@ -157,6 +177,12 @@ export default function AdminPage() {
                       .join(", ")}
                   </td>
                   <td className="px-4 py-3 text-right font-medium dark:text-white">
+                    ${order.total - order.surcharge}
+                  </td>
+                  <td className="px-4 py-3 text-right text-amber-600 dark:text-amber-400">
+                    +${order.surcharge}
+                  </td>
+                  <td className="px-4 py-3 text-right font-bold dark:text-white">
                     ${order.total}
                   </td>
                   <td className="px-4 py-3">
@@ -181,6 +207,22 @@ export default function AdminPage() {
                       >
                         Mark completed
                       </button>
+                    )}
+                    {order.status === "completed" && (
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => resendInvoice(order.id)}
+                          className="text-xs text-emerald-600 dark:text-emerald-400 hover:underline text-left"
+                        >
+                          Resend invoice
+                        </button>
+                        <button
+                          onClick={() => downloadInvoice(order.id)}
+                          className="text-xs text-amber-600 dark:text-amber-400 hover:underline text-left"
+                        >
+                          Download invoice
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

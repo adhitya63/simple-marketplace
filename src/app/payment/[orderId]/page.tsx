@@ -1,6 +1,6 @@
 "use client";
 
-import { QRCodeSVG } from "qrcode.react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 
@@ -15,6 +15,7 @@ type Order = {
   id: number;
   customer_name: string;
   total: number;
+  surcharge: number;
   status: string;
   order_items: OrderItem[];
 };
@@ -24,11 +25,6 @@ export default function PaymentPage() {
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
-
-  const payUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/pay/${orderId}`
-      : `/pay/${orderId}`;
 
   const fetchOrder = useCallback(async () => {
     const res = await fetch(`/api/orders/${orderId}`);
@@ -62,7 +58,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10 px-4">
+    <div className="max-w-md mx-auto mt-10 px-4 pb-10">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 text-center">
         Payment
       </h1>
@@ -84,20 +80,44 @@ export default function PaymentPage() {
             </span>
           </div>
         ))}
-        <div className="flex justify-between px-4 py-3 font-bold dark:text-white">
+        <div className="flex justify-between px-4 py-2 text-sm text-gray-500 dark:text-gray-400">
+          <span>Subtotal</span>
+          <span>${order.total - order.surcharge}</span>
+        </div>
+        <div className="flex justify-between px-4 py-2 text-sm text-amber-600 dark:text-amber-400">
+          <span>5% Surcharge</span>
+          <span>+${order.surcharge}</span>
+        </div>
+        <div className="flex justify-between px-4 py-3 font-bold dark:text-white border-t border-gray-100 dark:border-gray-700">
           <span>Total</span>
-          <span>${order.total}</span>
+          <span className="text-blue-600 dark:text-blue-400">
+            ${order.total}
+          </span>
         </div>
       </div>
 
-      {/* QR Code */}
+      {/* PayNow QR */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center mb-6">
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Scan to confirm payment
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Scan to pay via PayNow
         </p>
-        <QRCodeSVG value={payUrl} size={200} />
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 break-all text-center">
-          {payUrl}
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
+          Enter{" "}
+          <span className="font-semibold text-gray-700 dark:text-gray-300">
+            ${order.total}
+          </span>{" "}
+          as the amount
+        </p>
+        <Image
+          src="/paynow-qr.jpeg"
+          alt="PayNow QR Code"
+          width={220}
+          height={220}
+          className="rounded-lg"
+          unoptimized
+        />
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-4 text-center">
+          Staff will confirm and mark your order as paid.
         </p>
       </div>
 
