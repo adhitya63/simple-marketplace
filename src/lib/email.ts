@@ -51,7 +51,7 @@ export async function sendInvoiceEmail({
 
       <!-- Card -->
       <div style="background:#1a1a1a;border-radius:8px;padding:24px;margin-bottom:16px;">
-        <h2 style="color:#c9a84c;margin:0 0 4px 0;font-size:18px;letter-spacing:1px;">ORDER CONFIRMATION</h2>
+        <h2 style="color:#c9a84c;margin:0 0 4px 0;font-size:18px;letter-spacing:1px;">RECEIPT</h2>
         <p style="color:#888;margin:0 0 4px 0;font-size:13px;">Order #${orderId}</p>
         ${invoiceNumber ? `<p style="color:#c9a84c;margin:0 0 4px 0;font-size:12px;letter-spacing:1px;">${invoiceNumber}</p>` : `<p style="margin:0 0 4px 0;"></p>`}
         ${orderDate ? `<p style="color:#666;margin:0 0 20px 0;font-size:12px;">${new Date(orderDate).toLocaleDateString("en-SG", { day: "2-digit", month: "long", year: "numeric" })}</p>` : `<p style="margin:0 0 20px 0;"></p>`}
